@@ -1,0 +1,193 @@
+<?php
+// Memulai sesi untuk memeriksa status login pengguna
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Maju Bersama Furniture - Kualitas Terbaik untuk Rumah Anda</title>
+    <style>
+        /* --- Import Font --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+        /* --- CSS Reset & Basic Styling --- */
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', Arial, sans-serif; margin: 0; background-color: #fdfaf6; color: #333; }
+        a { text-decoration: none; color: #333; transition: color 0.3s ease; }
+        a:hover { color: #27ae60; }
+
+        /* --- Header --- */
+        .header { display: flex; align-items: center; padding: 15px 30px; border-bottom: 1px solid #eee; background-color: #fff; }
+        .logo img { width: 70px; height: 70px; border-radius: 50%; }
+        .company-name { flex-grow: 1; text-align: center; font-size: 28px; font-weight: 700; color: #2c3e50; }
+
+        /* --- Navigation Bar --- */
+        .nav-main { border-bottom: 1px solid #eee; background-color: #fff; padding: 0 20px; position: sticky; top: 0; z-index: 1000; }
+        .nav-main ul { display: flex; justify-content: center; list-style-type: none; margin: 0; padding: 0; align-items: center; }
+        .nav-main a { display: block; padding: 15px 20px; font-weight: 500; }
+        .nav-main a.active { font-weight: 700; color: #27ae60; }
+        .user-info { padding: 15px 20px; font-weight: 500; }
+        .logout-link { background-color: #e74c3c; color: white; padding: 8px 15px; border-radius: 5px; margin-left: 10px; }
+        .logout-link:hover { background-color: #c0392b; color: white; }
+
+        /* --- Content Area --- */
+        .content-area { display: flex; }
+
+        /* --- Sidebar --- */
+        .sidebar { width: 220px; border-right: 1px solid #eee; padding: 25px; background-color: #fff; flex-shrink: 0; }
+        .sidebar h3 { margin-top: 0; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .sidebar ul { list-style-type: none; padding: 0; margin: 0; }
+        .sidebar li { margin-bottom: 15px; }
+        .sidebar a { cursor: pointer; }
+        .sidebar a.active-filter { font-weight: 700; color: #27ae60; }
+        
+        /* --- Main Content (Produk) --- */
+        .main-content { flex-grow: 1; padding: 30px; }
+        .main-content h2 { margin-top: 0; font-size: 24px; margin-bottom: 25px; }
+        .product-grid { display: flex; flex-wrap: wrap; gap: 25px; }
+        .product-card { background-color: #fff; border: 1px solid #eee; border-radius: 8px; overflow: hidden; width: calc(33.333% - 20px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.3s ease, opacity 0.3s ease; }
+        .product-card.hidden { display: none; }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; }
+        .product-info { padding: 20px; }
+        .product-title { font-size: 18px; font-weight: 500; margin: 0 0 10px 0; }
+        .product-price { font-size: 16px; font-weight: 700; color: #27ae60; margin-bottom: 15px; }
+        .product-button { display: block; width: 100%; padding: 10px; background-color: #27ae60; color: #fff; text-align: center; border-radius: 5px; border: none; font-weight: 500; }
+
+        /* --- Sections: Tentang, Kontak, Testimoni --- */
+        .info-section { padding: 60px 40px; background-color: #fff; border-top: 1px solid #eee; }
+        .info-section h2 { text-align: center; font-size: 28px; margin-top: 0; margin-bottom: 40px; color: #2c3e50; }
+        .info-section p { max-width: 800px; margin: 0 auto 20px auto; line-height: 1.7; text-align: center; }
+        .contact-details { text-align: center; font-size: 16px; line-height: 1.8; }
+        .testimonial-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .testimonial-card { background-color: #fff; border: 1px solid #eee; border-radius: 8px; padding: 30px; width: 100%; max-width: 320px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; }
+        .testimonial-card .client-photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; }
+        .testimonial-card .client-name { font-weight: 700; font-size: 18px; margin-bottom: 5px; color: #2c3e50; }
+        .testimonial-card .star-rating { color: #f39c12; margin-bottom: 15px; font-size: 20px; }
+        .testimonial-card .quote { font-style: italic; color: #555; line-height: 1.6; }
+
+        /* --- Footer --- */
+        .footer { padding: 25px; text-align: center; background-color: #2c3e50; color: #fff; }
+        .footer .footnote { margin-top: 8px; font-size: 12px; color: #aaa; }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <img src="umsu.png" alt="Logo PT Maju Bersama Furniture">
+        </div>
+        <h1 class="company-name">PT Maju Bersama Furniture</h1>
+    </header>
+
+    <nav class="nav-main">
+        <ul>
+            <li><a href="beranda.php" class="active">Beranda</a></li>
+            <li><a href="#tentang-kami">Tentang Kami</a></li>
+            <li><a href="#kontak">Kontak</a></li>
+            <li><a href="#kepuasan-client">Testimoni</a></li>
+            
+            <?php if (isset($_SESSION['nama_lengkap'])) : ?>
+                <!-- Tampilan jika pengguna sudah login -->
+                <li class="user-info">Selamat Datang, <?php echo htmlspecialchars($_SESSION['nama_lengkap']); ?>!</li>
+                <li><a href="logout.php" class="logout-link">Logout</a></li>
+            <?php else : ?>
+                <!-- Tampilan jika pengguna belum login -->
+                <li><a href="login.php">Login / Daftar</a></li>
+            <?php endif; ?>
+
+        </ul>
+    </nav>
+
+    <div class="content-area">
+        <aside class="sidebar">
+            <h3>Kategori Produk</h3>
+            <ul>
+                <!-- Link filter dengan atribut data-category -->
+                <li><a data-category="all" class="active-filter">Semua Kategori</a></li>
+                <li><a data-category="ruang-tamu">Ruang Tamu</a></li>
+                <li><a data-category="kamar-tidur">Kamar Tidur</a></li>
+                <li><a data-category="dapur">Dapur</a></li>
+                <li><a data-category="kantor">Kantor</a></li>
+                <li><a data-category="luar-ruangan">Luar Ruangan</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <h2>Produk Kami</h2>
+            <div class="product-grid">
+                <!-- Setiap produk memiliki data-category yang sesuai -->
+                <div class="product-card" data-category="ruang-tamu"><img src="sofa.png" alt="Sofa"><div class="product-info"><h4 class="product-title">Sofa Minimalis Modern</h4><p class="product-price">Rp 4.500.000</p><button class="product-button">Lihat Detail</button></div></div>
+                <div class="product-card" data-category="kamar-tidur"><img src="lemari.png" alt="Lemari"><div class="product-info"><h4 class="product-title">Lemari Pakaian Elegan</h4><p class="product-price">Rp 3.200.000</p><button class="product-button">Lihat Detail</button></div></div>
+                <div class="product-card" data-category="dapur"><img src="kursimakan.png" alt="Kursi Kayu"><div class="product-info"><h4 class="product-title">Kursi Makan Skandinavia</h4><p class="product-price">Rp 750.000</p><button class="product-button">Lihat Detail</button></div></div>
+                <div class="product-card" data-category="kantor"><img src="mejakerja.png" alt="Meja Kerja"><div class="product-info"><h4 class="product-title">Meja Kerja Industrial</h4><p class="product-price">Rp 2.100.000</p><button class="product-button">Lihat Detail</button></div></div>
+                <div class="product-card" data-category="luar-ruangan"><img src="kursitaman.png" alt="Bangku Taman"><div class="product-info"><h4 class="product-title">Bangku Taman Kayu Jati</h4><p class="product-price">Rp 1.850.000</p><button class="product-button">Lihat Detail</button></div></div>
+                <div class="product-card" data-category="dapur"><img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=500&auto=format&fit=crop" alt="Rak Dapur"><div class="product-info"><h4 class="product-title">Rak Dapur Serbaguna</h4><p class="product-price">Rp 1.250.000</p><button class="product-button">Lihat Detail</button></div></div>
+            </div>
+        </main>
+    </div>
+
+    <section id="tentang-kami" class="info-section">
+        <h2>Tentang PT Maju Bersama Furniture</h2>
+        <p>PT Maju Bersama Furniture lahir dari kecintaan kami terhadap desain yang indah dan fungsional. Sejak 2020, kami berkomitmen untuk menyediakan furniture berkualitas tinggi yang tidak hanya mempercantik rumah Anda, tetapi juga memberikan kenyamanan maksimal.</p>
+    </section>
+
+    <section id="kontak" class="info-section" style="background-color: #fdfaf6;">
+        <h2>Hubungi Kami</h2>
+        <p>Punya pertanyaan atau butuh bantuan? Tim kami siap melayani Anda.</p>
+        <div class="contact-details">
+            <strong>Email:</strong> support@ptmajubersama.com<br>
+            <strong>Telepon:</strong> (021) 1234-5678<br>
+            <strong>Alamat:</strong> Jl. Desain Interior No. 123, Jakarta Selatan, Indonesia
+        </div>
+    </section>
+
+    <section id="kepuasan-client" class="info-section">
+        <h2>Testimoni Pelanggan</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card"><img src="https://placehold.co/80x80/27ae60/fff?text=AS" alt="Foto Klien" class="client-photo"><h4 class="client-name">Andi Setiawan</h4><div class="star-rating">★★★★★</div><p class="quote">"Kualitas sofanya luar biasa! Sangat nyaman dan membuat ruang tamu saya terlihat mewah."</p></div>
+            <div class="testimonial-card"><img src="https://placehold.co/80x80/3498db/fff?text=BL" alt="Foto Klien" class="client-photo"><h4 class="client-name">Bunga Lestari</h4><div class="star-rating">★★★★★</div><p class="quote">"Meja makan yang saya pesan persis seperti di gambar. Proses perakitan mudah dan hasilnya sangat kokoh."</p></div>
+            <div class="testimonial-card"><img src="https://placehold.co/80x80/e74c3c/fff?text=CD" alt="Foto Klien" class="client-photo"><h4 class="client-name">Citra Dewi</h4><div class="star-rating">★★★★☆</div><p class="quote">"Pengirimannya sedikit lebih lama dari perkiraan, tapi kualitas lemarinya sangat bagus."</p></div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <span>© <?php echo date("Y"); ?> PT Maju Bersama Furniture. Hak Cipta Dilindungi.</span>
+        <!-- PERUBAHAN DI SINI -->
+        <div class="footnote">Design by (albana)</div>
+    </footer>
+
+    <!-- SCRIPT JAVASCRIPT UNTUK FILTER -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterLinks = document.querySelectorAll('.sidebar a[data-category]');
+            const productCards = document.querySelectorAll('.product-card');
+
+            filterLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                    const selectedCategory = this.getAttribute('data-category');
+
+                    // Menandai filter yang aktif
+                    filterLinks.forEach(l => l.classList.remove('active-filter'));
+                    this.classList.add('active-filter');
+
+                    // Proses filter produk
+                    productCards.forEach(card => {
+                        const productCategory = card.getAttribute('data-category');
+                        if (selectedCategory === 'all' || productCategory === selectedCategory) {
+                            card.classList.remove('hidden');
+                            card.style.display = 'block';
+                        } else {
+                            card.classList.add('hidden');
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
